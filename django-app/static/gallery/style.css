@@ -1,0 +1,5 @@
+div.image_frame {
+  display: inline-block; margin: 1px;
+  text-align: center; vertical-align: middle;
+  width: 150px; height: 150px; border: none; }
+

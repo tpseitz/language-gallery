@@ -1,0 +1,10 @@
+[
+  { "model": "languagegallery.MimeType", "fields": {
+    "identifier": "JPEG", "mimetype": "image/jpeg", "extension": "jpeg" } },
+  { "model": "languagegallery.MimeType", "fields": {
+    "identifier": "PNG",  "mimetype": "image/png",  "extension": "png" } },
+  { "model": "languagegallery.MimeType", "fields": {
+    "identifier": "GIF",  "mimetype": "image/gif",  "extension": "gif" } },
+  { "model": "languagegallery.MimeType", "fields": {
+    "identifier": "TIFF", "mimetype": "image/tiff", "extension": "tiff" } }
+]

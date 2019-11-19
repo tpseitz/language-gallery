@@ -1,0 +1,26 @@
+<!DOCTYPE html><html>
+<head>{% load static %}
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="{% static 'gallery/style.css' %}">
+  <title>Image gallery</title>
+</head>
+<body>
+{% for file in file_list %}
+  <div class="image_frame">
+    <a href="files/{{file.hash_hex}}.{{file.extension}}" target="_blank">
+      <img src="thumb/{{file.hash_hex}}.jpeg">
+    </a>
+  </div>
+{% endfor %}
+
+<form action="{% url 'languagegallery:upload' %}"
+    enctype="multipart/form-data" method="post">
+  {% csrf_token %}
+  Title: <input type="text" name="title"><br>
+  File: <input type="file" name="upload"><br>
+  Tags: <br>
+  <input type="submit" value="Send"><br>
+</form>
+
+</body>
+</html>

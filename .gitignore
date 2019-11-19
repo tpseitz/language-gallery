@@ -1,0 +1,8 @@
+.*.swp
+*~
+*.[oa]
+*.class
+*.pro.user
+node_modules
+__pycache__
+
