@@ -1,2 +1,6 @@
-# language-gallery
-Web gallery made with different languages
+language-gallery
+================
+
+This is a project to learn different programming languages and frameworks by
+creating similar gallery with each.
+
