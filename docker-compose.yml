@@ -7,7 +7,7 @@ services:
     ports:
       - '8000:8000'
     volumes:
-      - django:/home/sid/app
+      - ./django:/home/sid/app
     links:
       - postgresql
     environment:
@@ -33,7 +33,7 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - react:
+      - ./react:/home/sid/app
     environment:
       - HTTPS=off
       - LANG=en_UK.utf8

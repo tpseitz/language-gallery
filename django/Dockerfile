@@ -8,7 +8,7 @@ RUN apt-get update \
 RUN useradd --home-dir /home/sid --create-home --uid 1001 sid
 
 USER sid
-COPY . /home/sid/app
+VOLUME . /home/sid/app
 WORKDIR /home/sid/app
 
 RUN python3.8 -m venv ~/.venv \
