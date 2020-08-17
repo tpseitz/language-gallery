@@ -6,7 +6,7 @@ def hex_to_bytes(string):
   return bytearray.fromhex(string)
 
 def bytes_to_hex(data):
-  return ''.join(['%02x' % b for b in data])
+  return ''.join(['%02x' % b for b in bytes(data)])
 
 # Model converters
 
