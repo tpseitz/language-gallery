@@ -16,6 +16,7 @@ services:
       - LC_ALL=en_UK.UTF-8
       - LC_LANG=en_UK.UTF-8
       - PYTHONUNBUFFERED=1
+      - DJANGO_SETTINGS_MODULE=local_settings
       - GIT_AUTHOR_EMAIL
       - GIT_AUTHOR_NAME
       - GIT_COMMITTER_EMAIL

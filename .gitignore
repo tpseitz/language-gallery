@@ -8,3 +8,5 @@ __pycache__
 
 /django/thumbnails
 /django/media
+
+local_settings.py
