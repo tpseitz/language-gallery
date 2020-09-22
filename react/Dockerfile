@@ -2,17 +2,18 @@ FROM ubuntu:20.04 AS webapp
 
 RUN apt-get update && \
     apt-get install -y \
-      nodejs && \
+      nodejs npm && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 RUN useradd --home-dir /home/sid --create-home --uid 1002 sid
 USER sid
 
-VOLUME . /home/sid/app
+ADD . /home/sid/app
+VOLUME ["/home/sid/app"]
 WORKDIR /home/sid/app
 
-RUN node install --local
+RUN npm install --local
 
 EXPOSE 3000
 
