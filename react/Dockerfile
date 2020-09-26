@@ -1,12 +1,7 @@
-FROM ubuntu:20.04 AS webapp
+FROM node:14-alpine AS webapp
 
-RUN apt-get update && \
-    apt-get install -y \
-      nodejs npm && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN useradd --home-dir /home/sid --create-home --uid 1002 sid
+#RUN useradd --home-dir /home/sid --create-home --uid 1002 sid
+RUN adduser -h /home/sid -u 1002 -D sid
 USER sid
 
 ADD . /home/sid/app
@@ -15,7 +10,7 @@ WORKDIR /home/sid/app
 
 RUN npm install --local
 
-EXPOSE 3000
+EXPOSE 3000/tcp
 
 CMD npm start
 
