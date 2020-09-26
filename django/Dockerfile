@@ -2,7 +2,7 @@ FROM ubuntu:20.04 AS runserver
 
 RUN apt-get update && \
     apt-get install -y \
-       python3.8 python3-venv && \
+       python3.8 python3-venv libpq-dev python3-dev build-essential && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -14,10 +14,11 @@ VOLUME ["/home/sid/app"]
 WORKDIR /home/sid/app
 
 RUN python3.8 -m venv ~/.venv
+RUN ~/.venv/bin/pip install wheel
 RUN ~/.venv/bin/pip install -r requirements.txt
 
 EXPOSE 8000
 
-#CMD . ~/.venv/bin/activate && \
-#  python manage.py runserver 0.0.0.0:8000
+CMD . ~/.venv/bin/activate && \
+  python manage.py runserver 0.0.0.0:8000
 

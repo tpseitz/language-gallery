@@ -17,7 +17,5 @@ RUN npm install --local
 
 EXPOSE 3000
 
-RUN tough /dev/null
-
-CMD node start
+CMD npm start
 
