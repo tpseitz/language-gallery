@@ -32,6 +32,26 @@ services:
     stdin_open: true
     tty: true
 
+  webapp:
+    image: webapp
+    build: react
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./react:/home/sid/app
+    environment:
+      - HTTPS=off
+      - LANG=en_UK.utf8
+      - LC_ALL=en_UK.UTF-8
+      - LC_LANG=en_UK.UTF-8
+      - NODE_PATH=/home/sid
+    networks:
+      - network
+    depends_on:
+      - runserver
+    stdin_open: true
+    tty: true
+
   postgresql:
     image: postgres:12
     environment:

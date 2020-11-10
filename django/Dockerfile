@@ -3,8 +3,7 @@ FROM python:3.8-alpine AS runserver
 RUN apk update && \
     apk add postgresql-dev gcc python3-dev musl-dev jpeg-dev zlib-dev
 
-#RUN useradd --home-dir /home/sid --create-home --uid 1002 sid
-RUN adduser -h /home/sid -u 1002 -D sid
+RUN adduser -h /home/sid -D sid
 USER sid
 
 ADD . /home/sid/app

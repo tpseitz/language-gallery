@@ -1,16 +1,21 @@
 FROM node:14-alpine AS webapp
 
-#RUN useradd --home-dir /home/sid --create-home --uid 1002 sid
-RUN adduser -h /home/sid -u 1002 -D sid
+ENV NODE_PATH /home/sid
+
+RUN adduser -h /home/sid -D sid
 USER sid
 
 ADD . /home/sid/app
-VOLUME --chown=1002 /home/sid/app
-VOLUME /home/sid/app/node_modules
+VOLUME /home/sid/app
+
+RUN mkdir /home/sid/node_modules
+RUN cp -f /home/sid/app/package.json /home/sid/
+WORKDIR /home/sid/node_modules
+RUN npm install
+
 WORKDIR /home/sid/app
 
 EXPOSE 3000/tcp
 
-CMD npm install && \
-    npm start
+CMD npm start
 
