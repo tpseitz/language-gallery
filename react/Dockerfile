@@ -15,7 +15,7 @@ RUN npm install
 
 WORKDIR /home/sid/app
 
-EXPOSE 3000/tcp
+RUN npm install
 
 CMD npm start
 

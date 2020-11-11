@@ -38,7 +38,8 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - ./react:/home/sid/app
+      - ./react:/home/sid/app:z
+      - node_modules:/home/sid/app/node_modules
     environment:
       - HTTPS=off
       - LANG=en_UK.utf8
