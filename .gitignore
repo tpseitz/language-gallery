@@ -10,3 +10,4 @@ __pycache__
 /django/media
 
 local_settings.py
+package-lock.json

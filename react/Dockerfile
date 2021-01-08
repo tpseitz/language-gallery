@@ -1,11 +1,13 @@
 FROM node:14-alpine AS webapp
 
-RUN adduser -h /home/sid -D sid
-USER sid
+RUN apk update && \
+    apk add bash zsh yarn
 
-ADD . /home/sid/app
-VOLUME /home/sid/app
+ADD . /home/node/app
+VOLUME /home/node/app
 
-WORKDIR /home/sid/app
+USER node
 
-ENTRYPOINT ["/usr/local/bin/npm"]
+WORKDIR /home/node/app
+
+CMD /home/node/app/run_react.sh

@@ -35,10 +35,12 @@ services:
   webapp:
     image: webapp
     build: react
+    user: node
+    command: /home/node/app/run_react.sh
     ports:
       - '3000:3000'
     volumes:
-      - ./react:/home/sid/app:z
+      - ./react:/home/node/app:z
       - node_modules:/home/sid/app/node_modules
     environment:
       - HTTPS=off
@@ -46,8 +48,6 @@ services:
       - LC_ALL=en_UK.UTF-8
       - LC_LANG=en_UK.UTF-8
       - NODE_PATH=/home/sid
-    command: install
-#    command: start
     networks:
       - network
     depends_on:
