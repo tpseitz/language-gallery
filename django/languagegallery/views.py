@@ -7,12 +7,32 @@ from django.urls import reverse
 from django.db import models as dbmodels
 from . import models, converters, forms, operations
 
+
 def index(request):
-  context = { 'upload_form': forms.UploadForm(), 'file_list':
-    map(converters.updateFile, models.FileInfo.objects.all()) }
+  context = {
+    'upload_form': forms.UploadForm(),
+    'file_list': models.FileInfo.objects.all(),
+  }
 
   template = loader.get_template('gallery.html')
   return HttpResponse(template.render(context, request))
+
+
+def frame(request, file_hash):
+  try:
+    file_object = models.FileInfo.objects.get(sha256=file_hash)
+
+    context = {
+      'file': file_object,
+      'tags': file_object.tags.all(),
+    }
+
+    template = loader.get_template('frame.html')
+    return HttpResponse(template.render(context, request))
+
+  except models.FileInfo.DoesNotExist as dne:
+    return HttpResponseNotFound('File does not exist')
+
 
 def upload(request):
   if request.method == 'POST':
@@ -24,19 +44,23 @@ def upload(request):
       return HttpResponse('Invalid form: %r' % (form.errors,)) #XXX
 
   #TODO Print failed message and return to upload page
-  return HttpResponseRedirect('/gallery')
+  return HttpResponseRedirect(reverse('index'))
+
 
 def file(request, file_hash, extension):
   try:
-    fio = models.FileInfo.objects.get(sha256=file_hash)
-    return HttpResponse(fio.file.open(), content_type=fio.mimetype.mimetype)
+    file_object = models.FileInfo.objects.get(sha256=file_hash)
+    return HttpResponse(file_object.file.open(),
+        content_type=file_object.mimetype.mimetype)
   except models.FileInfo.DoesNotExist as dne:
     return HttpResponseNotFound('File does not exist')
 
+
 def thumbnail(request, file_hash):
   try:
-    fio = models.FileInfo.objects.get(sha256=file_hash)
-    return FileResponse(fio.thumbnail.open(),content_type=fio.mimetype.mimetype)
+    file_object = models.FileInfo.objects.get(sha256=file_hash)
+    return FileResponse(file_object.thumbnail.open(),
+        content_type=file_object.mimetype.mimetype)
   except models.FileInfo.DoesNotExist as dne:
     return HttpResponseRedirect(settings.STATIC_URL + 'gallery/icon_broken.png')
 

@@ -9,6 +9,7 @@ app_name = 'languagegallery'
 urlpatterns = [
   path('', views.index, name='index'),
   path('upload/', views.upload, name='upload'),
-  path('files/<filehash:file_hash>.<extension:extension>', views.file, name='thumb'),
+  path('file/<filehash:file_hash>.<extension:extension>', views.file, name='file'),
+  path('show/<filehash:file_hash>.html', views.frame, name='show'),
   path('thumb/<filehash:file_hash>.jpeg', views.thumbnail, name='thumb')]
 

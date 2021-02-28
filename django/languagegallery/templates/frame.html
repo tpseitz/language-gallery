@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}File | {{ file.title }}{% endblock %}
+
+{% block content %}
+  <div class="file">
+    <img src="{% url 'languagegallery:file' file_hash=file.sha256 extension=file.mimetype.extension %}">
+    <p>{{ file.title }}</p>
+    <ul>{% for tag in tags %}
+      <li>{{ tag.name }}</li>
+    {% endfor -%}
+    </ul>
+  </div>
+{% endblock %}
+

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>{% load static %}
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'gallery/style.css' %}">
+    <title>{% block title %}Image gallery{% endblock %}</title>
+  </head>
+  <body>
+    <div>
+      {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>
