@@ -18,9 +18,9 @@ def index(request):
   return HttpResponse(template.render(context, request))
 
 
-def frame(request, file_hash):
+def frame(request, hash):
   try:
-    file_object = models.FileInfo.objects.get(sha256=file_hash)
+    file_object = models.FileInfo.objects.get(sha256=hash)
 
     context = {
       'file': file_object,
@@ -47,18 +47,18 @@ def upload(request):
   return HttpResponseRedirect(reverse('index'))
 
 
-def file(request, file_hash, extension):
+def file(request, hash, extension):
   try:
-    file_object = models.FileInfo.objects.get(sha256=file_hash)
+    file_object = models.FileInfo.objects.get(sha256=hash)
     return HttpResponse(file_object.file.open(),
         content_type=file_object.mimetype.mimetype)
   except models.FileInfo.DoesNotExist as dne:
     return HttpResponseNotFound('File does not exist')
 
 
-def thumbnail(request, file_hash):
+def thumbnail(request, hash):
   try:
-    file_object = models.FileInfo.objects.get(sha256=file_hash)
+    file_object = models.FileInfo.objects.get(sha256=hash)
     return FileResponse(file_object.thumbnail.open(),
         content_type=file_object.mimetype.mimetype)
   except models.FileInfo.DoesNotExist as dne:
