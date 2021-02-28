@@ -4,6 +4,10 @@ div#content {
   margin: auto;
 }
 
+div#content img {
+  max-width: 1200pt;
+}
+
 div#image_list {
   display: flex;
   flex-direction: row;

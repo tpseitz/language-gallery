@@ -12,8 +12,8 @@ class UploadForm(forms.Form):
   tags  = forms.MultipleChoiceField(choices=choices_tags, required=False)
 
 
-class UpdateFile(forms.ModelForm):
-  class Meta:
-    model = models.FileInfo
-    fields = ['title', 'tags']
+class UpdateFileForm(forms.Form):
+  title = forms.CharField(max_length=100, required=False)
+  add_tag  = forms.CharField(required=False)
+  del_tag  = forms.IntegerField(required=False)
 

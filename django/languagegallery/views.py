@@ -1,10 +1,9 @@
 import os.path
 from django.template import loader
 from django.conf import settings
-from django.http import HttpResponse, FileResponse, \
-  HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponse, FileResponse, HttpResponseRedirect, HttpResponseNotFound, JsonResponse
 from django.urls import reverse
-from django.db import models as dbmodels
+from django.views.decorators.csrf import csrf_exempt
 from . import models, converters, forms, operations
 
 
@@ -42,6 +41,48 @@ def upload(request):
       #TODO Print success message
     else:
       return HttpResponse('Invalid form: %r' % (form.errors,)) #XXX
+
+  #TODO Print failed message and return to upload page
+  return HttpResponseRedirect(reverse('languagegallery:index'))
+
+
+def update(request, hash):
+  if request.method == 'POST':
+    form = forms.UpdateFileForm(request.POST)
+    if form.is_valid():
+      file_object = models.FileInfo.objects.get(sha256=hash)
+
+      data = form.cleaned_data
+
+      if 'title' in data: file_object.title = data['title']
+
+      if data.get('add_tag'):
+        tag_name = data['add_tag'].lower()
+        if len(file_object.tags.filter(name=tag_name)) == 0:
+          tag, isnew = models.MediaTag.objects.get_or_create(name=tag_name)
+          if isnew: tag.save()
+          file_object.tags.add(tag)
+
+      if data.get('del_tag'):
+        tag = file_object.tags.filter(pk=data['del_tag'])
+        if len(tag) > 0:
+          file_object.tags.remove(tag[0])
+
+      file_object.save()
+
+      if request.content_type == 'application/json':
+        return JsonResponse({
+          'title': file_object.title,
+          'tags': [tag.name for tag in file_object.tags.all()],
+        })
+
+      else:
+        return HttpResponseRedirect(
+            reverse('languagegallery:show',
+            kwargs={ 'hash': hash }))
+
+    else:
+      return JsonResponse(form.errors)
 
   #TODO Print failed message and return to upload page
   return HttpResponseRedirect(reverse('languagegallery:index'))
