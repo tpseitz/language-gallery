@@ -15,6 +15,7 @@ services:
       - LC_ALL=en_UK.UTF-8
       - LC_LANG=en_UK.UTF-8
       - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
       - HTTPS=off
       - DJANGO_SETTINGS_MODULE=local_settings_docker
       - POSTGRES_HOST=postgresql
