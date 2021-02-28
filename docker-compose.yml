@@ -9,23 +9,19 @@ services:
     volumes:
       - ./django:/home/sid/app:z
       - filestorage:/home/sid/upload:z
-      - ./init_django.sh:/usr/bin/init_django.sh:z
+      - ./scripts/init_django.sh:/usr/bin/init_django.sh:z
     environment:
-      - HTTPS=off
       - LANG=en_UK.utf8
       - LC_ALL=en_UK.UTF-8
       - LC_LANG=en_UK.UTF-8
       - PYTHONUNBUFFERED=1
-      - DJANGO_SETTINGS_MODULE=local_settings
+      - HTTPS=off
+      - DJANGO_SETTINGS_MODULE=local_settings_docker
       - POSTGRES_HOST=postgresql
       - POSTGRES_PASSWORD=gallery
       - POSTGRES_USER=gallery
       - POSTGRES_DB=gallery
       - FIXTURES=languagegallery/fixtures/assets.json
-      - GIT_AUTHOR_EMAIL
-      - GIT_AUTHOR_NAME
-      - GIT_COMMITTER_EMAIL
-      - GIT_COMMITTER_NAME
     networks:
       - network
     links:
@@ -35,36 +31,35 @@ services:
     stdin_open: true
     tty: true
 
-#  webapp:
-#    image: webapp
-#    build: react
-#    user: node
-#    command: /usr/bin/run_react.sh
-#    ports:
-#      - '3000:3000'
-#    volumes:
-#      - ./react:/home/node/app:z
-#      - ./run_react.sh:/usr/bin/run_react.sh:z
-#      - node_modules:/home/sid/app/node_modules
-#    environment:
-#      - HTTPS=off
-#      - LANG=en_UK.utf8
-#      - LC_ALL=en_UK.UTF-8
-#      - LC_LANG=en_UK.UTF-8
-#      - NODE_PATH=/home/sid
-#    networks:
-#      - network
-#    depends_on:
-#      - runserver
-#    stdin_open: true
-#    tty: true
+  webapp:
+    image: webapp
+    build: react
+    user: node
+    command: /usr/bin/run_react.sh
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./react:/home/node/app:z
+      - ./scripts/run_react.sh:/usr/bin/run_react.sh:z
+      - node_modules:/home/sid/app/node_modules
+    environment:
+      - HTTPS=off
+      - LANG=en_UK.utf8
+      - LC_ALL=en_UK.UTF-8
+      - LC_LANG=en_UK.UTF-8
+    networks:
+      - network
+    depends_on:
+      - runserver
+    stdin_open: true
+    tty: true
 
   postgresql:
     image: postgres:12
     environment:
-      - POSTGRES_DB=django
-      - POSTGRES_USER=django
-      - POSTGRES_PASSWORD=django
+      - POSTGRES_DB=gallery
+      - POSTGRES_USER=gallery
+      - POSTGRES_PASSWORD=gallery
     volumes:
       - postgresql:/var/lib/postgresql/data
     ports:

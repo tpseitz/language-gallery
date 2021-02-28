@@ -5,8 +5,8 @@ RUN apk update && \
         gcc postgresql-dev python3-dev musl-dev jpeg-dev zlib-dev
 
 RUN adduser -h /home/sid -D sid
-RUN mkdir /home/sid/upload
-RUN chown sid.sid /home/sid/upload
+RUN mkdir /home/sid/upload && \
+    chown sid.sid /home/sid/upload
 
 USER sid
 
