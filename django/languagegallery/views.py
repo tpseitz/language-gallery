@@ -44,7 +44,7 @@ def upload(request):
       return HttpResponse('Invalid form: %r' % (form.errors,)) #XXX
 
   #TODO Print failed message and return to upload page
-  return HttpResponseRedirect(reverse('index'))
+  return HttpResponseRedirect(reverse('languagegallery:index'))
 
 
 def file(request, hash, extension):

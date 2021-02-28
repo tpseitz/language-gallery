@@ -1,5 +1,31 @@
-div.image_frame {
-  display: inline-block; margin: 1px;
-  text-align: center; vertical-align: middle;
-  width: 150px; height: 150px; border: none; }
+div#content {
+  max-width: 200pt;
+  max-width: 1200pt;
+  margin: auto;
+}
 
+div#image_list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+}
+
+div.image_frame {
+  display: inline-block;
+  margin: 1px;
+  border: none;
+  text-align: center;
+  vertical-align: middle;
+  width: 150px;
+  height: 150px;
+}
+
+div.file {
+  text-align: center;
+}
+
+div#upload-form {
+  text-align: center;
+}

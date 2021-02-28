@@ -3,14 +3,16 @@
 {% block title %}Gallery{% endblock %}
 
 {% block content %}
-  {% for file in file_list %}
-    <div class="image_frame">
-      <a href="{% url 'languagegallery:show' hash=file.sha256 %}"
-          target="_blank">
-        <img src="{% url 'languagegallery:thumb' hash=file.sha256 %}">
-      </a>
-    </div>
-  {% endfor %}
+  <div id="image_list">
+    {% for file in file_list %}
+      <div class="image_frame">
+        <a href="{% url 'languagegallery:show' hash=file.sha256 %}"
+            target="_blank">
+          <img src="{% url 'languagegallery:thumb' hash=file.sha256 %}">
+        </a>
+      </div>
+    {% endfor %}
+  </div>
 
   {% if user.is_authenticated %}
     <div id="upload-form">
