@@ -1,9 +1,13 @@
 FROM python:3.8-alpine AS runserver
 
 RUN apk update && \
-    apk add postgresql-dev gcc python3-dev musl-dev jpeg-dev zlib-dev
+    apk add sudo bash zsh \
+        gcc postgresql-dev python3-dev musl-dev jpeg-dev zlib-dev
 
 RUN adduser -h /home/sid -D sid
+RUN mkdir /home/sid/upload
+RUN chown sid.sid /home/sid/upload
+
 USER sid
 
 ADD . /home/sid/app

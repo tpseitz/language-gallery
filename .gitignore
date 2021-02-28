@@ -7,7 +7,8 @@ node_modules
 __pycache__
 
 /django/thumbnails
+/django/upload
 /django/media
+/django/local_settings.py
 
-local_settings.py
 package-lock.json
