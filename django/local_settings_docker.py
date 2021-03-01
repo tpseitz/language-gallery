@@ -19,3 +19,7 @@ DATABASES = {
 
 MEDIA_ROOT = '/home/sid/upload'
 
+STATICFILES_DIRS = [
+  '/home/sid/brython',
+]
+

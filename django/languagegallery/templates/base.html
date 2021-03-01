@@ -2,10 +2,12 @@
 <html>
   <head>{% load static %}
     <meta charset="UTF-8">
+    <script type="text/javascript" src="{% static 'brython.js' %}"></script>
+    <script type="text/javascript" src="{% static 'brython_stdlib.js' %}"></script>
     <link rel="stylesheet" href="{% static 'gallery/style.css' %}">
     <title>{% block title %}Image gallery{% endblock %}</title>
   </head>
-  <body>
+  <body onload="brython()">
     <div id="content">
       {% block content %}{% endblock %}
     </div>
