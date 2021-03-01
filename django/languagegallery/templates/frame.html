@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.html" %}{% load static %}
 
 {% block title %}File | {{ file.title }}{% endblock %}
 
@@ -11,17 +11,20 @@
             enctype="multipart/form-data" method="post">
           {% csrf_token %}
           <p><input type="text" name="title" id="id_title" value="{{ file.title }}"></p>
-          <ul>{% for tag in tags %}
-              <li>{{ tag.name }}</li>
+          <ul id="tags">{% for tag in tags %}
+            <li>{{ tag.name }}<a
+                href="{% url 'languagegallery:deltag' hash=file.sha256 tag=tag.pk %}"
+                class="delete"><img class="icon" src="{% static 'icons/delete.svg' %}"></a>
+            </li>
             {% endfor -%}
-            <li><input type="text" name="add_tag" id="id_add_tag"></li>
+            <li class="input"><input type="text" name="add_tag" id="id_add_tag"></li>
           </ul>
           <input type="submit" value="Send">
         </form>
       </div>
     {% else %}
       <p>{{ file.title }}</p>
-      <ul>{% for tag in tags %}
+      <ul id="tags">{% for tag in tags %}
         <li>{{ tag.name }}</li>
       {% endfor -%}
       </ul>
