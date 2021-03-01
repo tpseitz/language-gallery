@@ -13,5 +13,6 @@ urlpatterns = [
 
   path('upload/', views.upload, name='upload'),
   path('update/<filehash:hash>', views.update, name='update'),
+  path('remove/tag/<filehash:hash>/<int:tag>', views.delete_tag, name='deltag'),
 ]
 
