@@ -5,7 +5,7 @@ from . import converters, models
 
 THUMBNAIL_SIZE = 140
 
-def handle_upload(post, file_data):
+def handle_upload(post, file_data, creator):
   raw = file_data.read()
 
   # Calculate file hash
@@ -13,7 +13,7 @@ def handle_upload(post, file_data):
   hshstr = converters.bytes_to_hex(hsh)
 
   img = Image.open(BytesIO(raw))
-  # REad size
+  # Read size
   width, height = img.size
   # Get mimetype from database
   mime = models.MimeType.objects.get(identifier=img.format)
@@ -25,6 +25,7 @@ def handle_upload(post, file_data):
   img.save(buf, 'JPEG')
 
   fo = models.FileInfo(
+    creator   = creator,
     sha256    = hsh,
     basename  = file_data.name,
     mimetype  = mime,
@@ -33,4 +34,6 @@ def handle_upload(post, file_data):
   fo.file.save('%s.%s' % (hshstr, mime.extension), BytesIO(raw))
   fo.thumbnail.save('%s.jpeg' % (hshstr,), buf)
   fo.save()
+
+  return fo
 

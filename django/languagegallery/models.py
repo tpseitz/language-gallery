@@ -1,5 +1,9 @@
 from django.db import models
 from django.utils.translation import gettext as _
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 
 class MimeType(models.Model):
@@ -16,7 +20,10 @@ class MimeType(models.Model):
 
 
 class MediaTag(models.Model):
-  name  = models.CharField(max_length=50, verbose_name=_('name'), null=False, blank=False)
+  creator = models.ForeignKey(User, models.CASCADE, verbose_name=_('creator'))
+  created = models.DateTimeField(verbose_name=_('created'), auto_now_add=True)
+
+  name    = models.CharField(max_length=50, verbose_name=_('name'), unique=True)
 
   class Meta:
     verbose_name = _('tag')
@@ -27,15 +34,23 @@ class MediaTag(models.Model):
 
 
 class FileInfo(models.Model):
+  creator   = models.ForeignKey(User, models.CASCADE, verbose_name=_('uploader'))
+  created   = models.DateTimeField(verbose_name=_('uploaded'), auto_now_add=True)
+  modified  = models.DateTimeField(verbose_name=_('modified'), auto_now=True)
+
   sha256    = models.BinaryField(max_length=32, unique=True, verbose_name=_('checksum, SHA256'))
-  basename  = models.CharField(max_length=50, verbose_name=_('basename'))
-  mimetype  = models.ForeignKey('Mimetype', models.PROTECT, verbose_name=_('mimetype'))
-  width     = models.BigIntegerField(null=True, verbose_name=_('width'))
-  height    = models.BigIntegerField(null=True, verbose_name=_('height'))
-  title     = models.CharField(max_length=100, null=False, default='', verbose_name=_('title'))
-  tags      = models.ManyToManyField('MediaTag', related_name='files', verbose_name=_('tags'))
+  basename  = models.CharField(max_length=200, verbose_name=_('basename'))
+  mimetype  = models.ForeignKey(MimeType, models.PROTECT, verbose_name=_('mimetype'))
+
   file      = models.FileField(upload_to='media', verbose_name=_('file'))
   thumbnail = models.ImageField(upload_to='thumbnails', verbose_name=_('thumbnails'))
+
+  title     = models.CharField(max_length=100, default='', verbose_name=_('title'), blank=True)
+  width     = models.BigIntegerField(verbose_name=_('width'), null=True)
+  height    = models.BigIntegerField(verbose_name=_('height'), null=True)
+
+  tags      = models.ManyToManyField(MediaTag, related_name='files', verbose_name=_('tags'), blank=True)
+  is_public = models.BooleanField(verbose_name=_("Is public"), default=False)
 
   class Meta:
     verbose_name = _('file info')

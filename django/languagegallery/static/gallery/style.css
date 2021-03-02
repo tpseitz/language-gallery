@@ -22,14 +22,12 @@ div#image_list {
   align-content: flex-start;
 }
 
-div.image_frame {
+div#image_list div.image_frame {
   display: inline-block;
   margin: 1px;
   border: none;
   text-align: center;
   vertical-align: middle;
-  width: 150px;
-  height: 150px;
 }
 
 div.file {

@@ -31,28 +31,28 @@ services:
     stdin_open: true
     tty: true
 
-  webapp:
-    image: webapp
-    build: react
-    user: node
-    command: /usr/bin/run_react.sh
-    ports:
-      - '3000:3000'
-    volumes:
-      - ./react:/home/node/app:z
-      - ./scripts/run_react.sh:/usr/bin/run_react.sh:z
-      - node_modules:/home/sid/app/node_modules
-    environment:
-      - HTTPS=off
-      - LANG=en_UK.utf8
-      - LC_ALL=en_UK.UTF-8
-      - LC_LANG=en_UK.UTF-8
-    networks:
-      - network
-    depends_on:
-      - runserver
-    stdin_open: true
-    tty: true
+#  webapp:
+#    image: webapp
+#    build: react
+#    user: node
+#    command: /usr/bin/run_react.sh
+#    ports:
+#      - '3000:3000'
+#    volumes:
+#      - ./react:/home/node/app:z
+#      - ./scripts/run_react.sh:/usr/bin/run_react.sh:z
+#      - node_modules:/home/sid/app/node_modules
+#    environment:
+#      - HTTPS=off
+#      - LANG=en_UK.utf8
+#      - LC_ALL=en_UK.UTF-8
+#      - LC_LANG=en_UK.UTF-8
+#    networks:
+#      - network
+#    depends_on:
+#      - runserver
+#    stdin_open: true
+#    tty: true
 
   postgresql:
     image: postgres:12
