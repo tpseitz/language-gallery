@@ -6,13 +6,12 @@ register_converter(converters.FileExtension, 'extension')
 
 app_name = 'languagegallery'
 urlpatterns = [
-  path('', views.index, name='index'),
-  path('file/<filehash:hash>.<extension:extension>', views.file, name='file'),
-  path('show/<filehash:hash>.html', views.frame, name='show'),
+  path('', views.file_gallery, name='index'),
+  path('show/<filehash:hash>.html', views.file_frame, name='show'),
   path('thumb/<filehash:hash>.jpeg', views.thumbnail, name='thumb'),
+  path('file/<filehash:hash>.<extension:extension>', views.file, name='file'),
 
-  path('upload/', views.upload, name='upload'),
-  path('update/<filehash:hash>', views.update, name='update'),
-  path('remove/tag/<filehash:hash>/<int:tag>', views.delete_tag, name='deltag'),
+  path('api/files/', views.file_upload, name='upload'),
+  path('api/files/<filehash:hash>', views.file_update, name='update'),
 ]
 

@@ -17,7 +17,7 @@
             <label for="id_is_public">public</p>
           <ul id="tags">{% for tag in tags %}
             <li>{{ tag.name }}<a
-                href="{% url 'languagegallery:deltag' hash=file.sha256 tag=tag.pk %}"
+                href="{% url 'languagegallery:update' hash=file.sha256 %}?del_tag={{ tag.pk }}"
                 class="delete"><img class="icon" src="{% static 'icons/delete.svg' %}"></a>
             </li>
             {% endfor -%}
