@@ -60,6 +60,7 @@ def file_frame(request, hash, form=None):
     'file': file_object,
     'tags': file_object.tags.all(),
     'form': form,
+    'show_edit': file_object.creator == request.user,
   }
 
   template = loader.get_template('frame.html')
