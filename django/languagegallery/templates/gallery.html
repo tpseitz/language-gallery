@@ -25,22 +25,9 @@
     </div>
   {% endif %}
 
-  <script type="text/python">
-from browser import document
+{% endblock %}
+{% block script %}
+  import interface
 
-form_div = document.querySelector('#upload-form')
-
-if form_div:
-  form_div.querySelector('input[type="submit"]').hidden = True
-  upload = form_div.querySelector('#id_upload')
-  upload.onchange = form_div.querySelector('form').submit
-  upload.hidden = True
-
-  button = document.createElement('button')
-  button.appendChild(document.createTextNode('Upload'))
-  button.onclick = upload.click
-
-  form_div.appendChild(button)
-
-</script>
+  interface.upload_button('#upload-form')
 {% endblock %}
