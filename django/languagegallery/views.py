@@ -12,12 +12,12 @@ from . import models, converters, forms, operations
 TIME_FORMAT = '%a, %d %b %Y %H:%M:%S GMT'
 
 
-def serialize_file_object(file_object):
+def _serialize_file_object(file_object):
   return {
     'basename':  file_object.basename,
     'mimetype':  file_object.mimetype.mimetype,
     'extension':  file_object.mimetype.extension,
-    'file':      reverse('languagegallery:show', kwargs={ 'hash': file_object.sha256 }),
+    'file':      reverse('languagegallery:show_update', kwargs={ 'hash': file_object.sha256 }),
     'thumbnail': reverse('languagegallery:thumb', kwargs={ 'hash': file_object.sha256 }),
     'title':     file_object.title,
     'width':     file_object.width,
@@ -47,6 +47,26 @@ def file_gallery(request):
   return HttpResponse(template.render(context, request))
 
 
+def file_upload(request):
+  user = request.user
+  if not user.is_authenticated:
+    return HttpResponseForbidden('Permission denied')
+
+  if request.method != 'POST':
+    return HttpResponseForbidden('Permission denied')
+
+  form = forms.UploadForm(request.POST, request.FILES)
+
+  if not form.is_valid():
+    #TODO Display error page
+    return HttpResponse('Invalid form: %r' % (form.errors,))
+
+  file_object = operations.handle_upload(request.POST, request.FILES['upload'], user)
+
+  return HttpResponseRedirect(reverse('languagegallery:show_update',
+      kwargs={ 'hash': file_object.sha256 }))
+
+
 def file_frame(request, hash, form=None):
   try:
     file_object = models.FileInfo.objects.get(sha256=hash)
@@ -67,57 +87,6 @@ def file_frame(request, hash, form=None):
   return HttpResponse(template.render(context, request))
 
 
-def thumbnail(request, hash):
-  try:
-    file_object = models.FileInfo.objects.get(sha256=hash)
-  except models.FileInfo.DoesNotExist as dne:
-    return HttpResponseRedirect(settings.STATIC_URL + 'gallery/icon_broken.png')
-
-  if not (file_object.is_public or file_object.creator == request.user):
-    return HttpResponseRedirect(settings.STATIC_URL + 'gallery/icon_broken.png')
-
-  response = FileResponse(file_object.thumbnail.open(),
-      content_type=file_object.mimetype.mimetype)
-  response['Expires'] = (datetime.datetime.now() + datetime.timedelta(days=7)).strftime(TIME_FORMAT)
-  return response
-
-
-def file(request, hash, extension):
-  try:
-    file_object = models.FileInfo.objects.get(sha256=hash)
-  except models.FileInfo.DoesNotExist as dne:
-    return HttpResponseForbidden('Permission denied')
-
-  if not (file_object.is_public or file_object.creator == request.user):
-    return HttpResponseForbidden('Permission denied')
-
-  response = HttpResponse(file_object.file.open(), content_type=file_object.mimetype.mimetype)
-  response['Expires'] = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime(TIME_FORMAT)
-  return response
-
-
-@csrf_exempt
-def file_upload(request):
-  user = request.user
-  if not user.is_authenticated:
-    return HttpResponseForbidden('Permission denied')
-
-  if request.method != 'POST':
-    return HttpResponseForbidden('Permission denied')
-
-  form = forms.UploadForm(request.POST, request.FILES)
-
-  if not form.is_valid():
-    #TODO Display error page
-    return HttpResponse('Invalid form: %r' % (form.errors,))
-
-  file_object = operations.handle_upload(request.POST, request.FILES['upload'], user)
-
-  return HttpResponseRedirect(reverse('languagegallery:show',
-      kwargs={ 'hash': file_object.sha256 }))
-
-
-@csrf_exempt
 def file_update(request, hash):
   try:
     file_object = models.FileInfo.objects.get(sha256=hash)
@@ -131,7 +100,7 @@ def file_update(request, hash):
 
   if request.method == 'POST':
     form = forms.UpdateFileForm(request.POST)
-  elif set(request.GET) & {'title', 'is_public', 'add_tag', 'del_tag'}:
+  elif set(request.GET):
     form = forms.UpdateFileForm(request.GET)
   else:
     return HttpResponseForbidden('Permission denied')
@@ -147,9 +116,11 @@ def file_update(request, hash):
 
   data = form.cleaned_data
 
-  if data.get('title'): file_object.title = data['title']
+  if data.get('title'):
+    file_object.title = data['title']
 
-  if data.get('is_public'): file_object.is_public = data['is_public']
+  if data.get('is_public') is not None:
+    file_object.is_public = data['is_public']
 
   if data.get('add_tag'):
     tag_name = data['add_tag'].lower()
@@ -168,7 +139,50 @@ def file_update(request, hash):
   file_object.save()
 
   if request.content_type == 'application/json':
-    return JsonResponse(serialize_file_object(file_object))
+    return JsonResponse(_serialize_file_object(file_object))
   else:
-    return HttpResponseRedirect(reverse('languagegallery:show', kwargs={ 'hash': hash }))
+    return HttpResponseRedirect(reverse('languagegallery:show_update', kwargs={ 'hash': hash }))
+
+
+def thumbnail(request, size, hash):
+  try:
+    file_object = models.FileInfo.objects.get(sha256=hash)
+  except models.FileInfo.DoesNotExist as dne:
+    return HttpResponseRedirect(settings.STATIC_URL + 'gallery/icon_broken.png')
+
+  if not (file_object.is_public or file_object.creator == request.user):
+    return HttpResponseRedirect(settings.STATIC_URL + 'gallery/icon_broken.png')
+
+  response = FileResponse(file_object.thumbnail.open(),
+      content_type=file_object.mimetype.mimetype)
+  response['Expires'] = (datetime.datetime.now() + datetime.timedelta(days=7)).strftime(TIME_FORMAT)
+  return response
+
+
+def get_file(request, hash, extension):
+  try:
+    file_object = models.FileInfo.objects.get(sha256=hash)
+  except models.FileInfo.DoesNotExist as dne:
+    return HttpResponseForbidden('Permission denied')
+
+  if not (file_object.is_public or file_object.creator == request.user):
+    return HttpResponseForbidden('Permission denied')
+
+  response = HttpResponse(file_object.file.open(), content_type=file_object.mimetype.mimetype)
+  response['Expires'] = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime(TIME_FORMAT)
+  return response
+
+
+def list_or_upload(request):
+  if request.method == 'POST':
+    return file_upload(request)
+  else:
+    return file_gallery(request)
+
+
+def frame_or_update(request, hash):
+  if request.method == 'POST' or set(request.GET):
+    return file_update(request, hash)
+  else:
+    return file_frame(request, hash)
 

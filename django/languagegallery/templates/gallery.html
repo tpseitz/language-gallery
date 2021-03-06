@@ -6,9 +6,9 @@
   <div id="image_list">
     {% for file in file_list %}
       <div class="image_frame">
-        <a href="{% url 'languagegallery:show' hash=file.sha256 %}"
+        <a href="{% url 'languagegallery:show_update' hash=file.sha256 %}"
             target="_blank">
-          <img src="{% url 'languagegallery:thumb' hash=file.sha256 %}">
+          <img src="{% url 'languagegallery:thumb' size=150 hash=file.sha256 %}">
         </a>
       </div>
     {% endfor %}
@@ -16,7 +16,7 @@
 
   {% if user.is_authenticated %}
     <div id="upload-form">
-      <form action="{% url 'languagegallery:upload' %}"
+      <form action="{% url 'languagegallery:list_update' %}"
           enctype="multipart/form-data" method="post">
         {% csrf_token %}
         <input type="file" name="upload" required id="id_upload">
