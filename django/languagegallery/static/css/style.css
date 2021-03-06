@@ -2,6 +2,38 @@ div#content {
   max-width: 200pt;
   max-width: 1200pt;
   margin: auto;
+  font-family: "sans";
+}
+
+table.table {
+  width: 99%;
+  border-collapse: collapse;
+}
+
+table.table thead td {
+  background: #8af;
+  color: #fff;
+  font-weight: bold;
+}
+
+table.table tbody tr:nth-child(even) {
+  background: #eef;
+}
+
+table.table td {
+  padding: 2pt 10pt;
+  margin: 0pt;
+  border: solid 1pt #ddd;
+}
+
+table td.icon {
+  width: 1.5em;
+  padding: 1pt;
+  text-align: center;
+}
+
+table td.icon img {
+  max-height: 1em;
 }
 
 img.icon {
@@ -57,7 +89,7 @@ ul#tags {
   margin: auto;
 }
 
-ul#tags li {
+ul#tags li, span.tag {
   display: inline-block;
   background: #aaf;
   color: #004;
