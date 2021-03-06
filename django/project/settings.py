@@ -120,3 +120,12 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, '..', 'staticroot')
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+  'project/static',
+]
+
+
+# Default thumbnail sizes
+THUMBNAIL_WIDTH  = 400
+THUMBNAIL_HEIGHT = 300
+

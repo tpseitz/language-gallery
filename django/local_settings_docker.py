@@ -4,6 +4,8 @@ from os import getenv
 
 DEBUG = True
 
+ALLOWED_HOSTS = ['*']
+
 SECRET_KEY = 'REPLACE WITH REAL SECRET'
 
 DATABASES = {
@@ -19,7 +21,7 @@ DATABASES = {
 
 MEDIA_ROOT = '/home/sid/upload'
 
-STATICFILES_DIRS = [
+STATICFILES_DIRS += [
   '/home/sid/brython',
 ]
 

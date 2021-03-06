@@ -2,8 +2,10 @@ from io import BytesIO
 from hashlib import sha256
 from PIL import Image
 from . import converters, models
+from django.conf import settings
 
-THUMBNAIL_SIZE = 140
+THUMBNAIL_WIDTH  = settings.THUMBNAIL_WIDTH
+THUMBNAIL_HEIGHT = settings.THUMBNAIL_HEIGHT
 
 def handle_upload(post, file_data, creator):
   raw = file_data.read()
@@ -20,10 +22,11 @@ def handle_upload(post, file_data, creator):
 
   # Create thumbnail and store it ti bytearray
   if img.mode != 'RGB': img = img.convert('RGB')
-  img.thumbnail((THUMBNAIL_SIZE, THUMBNAIL_SIZE))
+  img.thumbnail((THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT))
   buf = BytesIO()
   img.save(buf, 'JPEG')
 
+  # Create object from all the data
   fo = models.FileInfo(
     creator   = creator,
     sha256    = hsh,
