@@ -8,7 +8,7 @@
       <div class="image_frame">
         <a href="{% url 'languagegallery:show_update' hash=file.sha256 %}"
             target="_blank">
-          <img src="{% url 'languagegallery:thumb' size=150 hash=file.sha256 %}">
+          <img src="{% url 'languagegallery:thumb' size=300 hash=file.sha256 %}">
         </a>
       </div>
     {% endfor %}

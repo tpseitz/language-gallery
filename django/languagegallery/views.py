@@ -1,4 +1,6 @@
 import datetime, os.path
+from io import BytesIO
+from PIL import Image
 from django.template import loader
 from django.conf import settings
 from django.db.models import Q
@@ -33,17 +35,25 @@ def _list_files(request):
   else:
     files = models.FileInfo.objects.filter(is_public=True)
 
-  files = files.order_by('title', 'basename', 'created')
+  files = files.order_by('basename')
 
   return files
 
 
 def file_gallery(request):
   context = {
-    'upload_form': forms.UploadForm(),
-    'file_list': _list_files(request),
+    'upload_form':  forms.UploadForm(),
+    'file_list':    _list_files(request),
+    'thumb_width':  settings.THUMBNAIL_WIDTH,
+    'thumb_height': settings.THUMBNAIL_HEIGHT,
   }
-  template = loader.get_template('gallery.html')
+
+  display = request.GET.get('display')
+  if display == 'list':
+    template = loader.get_template('list.html')
+  else:
+    template = loader.get_template('gallery.html')
+
   return HttpResponse(template.render(context, request))
 
 
@@ -153,8 +163,14 @@ def thumbnail(request, size, hash):
   if not (file_object.is_public or file_object.creator == request.user):
     return HttpResponseRedirect(settings.STATIC_URL + 'gallery/icon_broken.png')
 
-  response = FileResponse(file_object.thumbnail.open(),
-      content_type=file_object.mimetype.mimetype)
+  if size < settings.THUMBNAIL_HEIGHT:
+    img, buf = Image.open(file_object.thumbnail.open()), BytesIO()
+    img.thumbnail((size, size))
+    img.save(buf, 'JPEG')
+    response = FileResponse(BytesIO(buf.getbuffer()), content_type='image/jpeg')
+  else:
+    response = FileResponse(file_object.thumbnail.open(), content_type='image/jpeg')
+
   response['Expires'] = (datetime.datetime.now() + datetime.timedelta(days=7)).strftime(TIME_FORMAT)
   return response
 
