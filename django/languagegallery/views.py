@@ -164,14 +164,14 @@ def thumbnail(request, size, hash):
   if not (file_object.is_public or file_object.creator == request.user):
     return HttpResponseRedirect(settings.STATIC_URL + 'gallery/icon_broken.png')
 
-  if size < settings.THUMBNAIL_HEIGHT:
+  if size < settings.THUMBNAIL_HEIGHT and size in settings.THUMBNAIL_ALLOWED_SIZES:
     hexhash = converters.bytes_to_hex(hash)
     cache = caches['files']
     key = f'{hexhash}-{size}'
     data = cache.get(key)
     if data is None:
       img, buf = Image.open(file_object.thumbnail.open()), BytesIO()
-      img.thumbnail((size, size))
+      img.thumbnail((size * settings.THUMBNAIL_WIDTH // settings.THUMBNAIL_HEIGHT, size))
       img.save(buf, 'JPEG')
       data = buf.getbuffer().tobytes()
       cache.set(key, data)
