@@ -3,6 +3,7 @@ from io import BytesIO
 from PIL import Image
 from django.template import loader
 from django.conf import settings
+from django.core.cache import caches
 from django.db.models import Q
 from django.http import (HttpResponse, FileResponse, JsonResponse,
     HttpResponseRedirect, HttpResponseNotFound, HttpResponseForbidden)
@@ -164,10 +165,17 @@ def thumbnail(request, size, hash):
     return HttpResponseRedirect(settings.STATIC_URL + 'gallery/icon_broken.png')
 
   if size < settings.THUMBNAIL_HEIGHT:
-    img, buf = Image.open(file_object.thumbnail.open()), BytesIO()
-    img.thumbnail((size, size))
-    img.save(buf, 'JPEG')
-    response = FileResponse(BytesIO(buf.getbuffer()), content_type='image/jpeg')
+    hexhash = converters.bytes_to_hex(hash)
+    cache = caches['files']
+    key = f'{hexhash}-{size}'
+    data = cache.get(key)
+    if data is None:
+      img, buf = Image.open(file_object.thumbnail.open()), BytesIO()
+      img.thumbnail((size, size))
+      img.save(buf, 'JPEG')
+      data = buf.getbuffer().tobytes()
+      cache.set(key, data)
+    response = FileResponse(BytesIO(data), content_type='image/jpeg')
   else:
     response = FileResponse(file_object.thumbnail.open(), content_type='image/jpeg')
 

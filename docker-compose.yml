@@ -9,6 +9,7 @@ services:
     volumes:
       - ./django:/home/sid/app:z
       - filestorage:/home/sid/upload:z
+      - filecache:/home/sid/cache:z
       - ./scripts/init_django.sh:/usr/bin/init_django.sh:z
     environment:
       - LANG=en_UK.utf8
@@ -71,6 +72,7 @@ services:
 
 volumes:
   filestorage:
+  filecache:
   node_modules:
   postgresql:
 

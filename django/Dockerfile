@@ -5,8 +5,9 @@ RUN apk update && \
         gcc postgresql-dev python3-dev musl-dev jpeg-dev zlib-dev
 
 RUN adduser -h /home/sid -D sid
-RUN mkdir /home/sid/upload /home/sid/brython && \
-    chown sid.sid /home/sid/upload /home/sid/brython
+RUN mkdir /home/sid/upload /home/sid/cache /home/sid/brython && \
+    chown sid.sid /home/sid/upload /home/sid/cache /home/sid/brython && \
+    chmod 755 /home/sid/upload /home/sid/cache /home/sid/brython
 
 USER sid
 
