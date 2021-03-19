@@ -20,13 +20,15 @@ def _serialize_file_object(file_object):
     'basename':  file_object.basename,
     'mimetype':  file_object.mimetype.mimetype,
     'extension':  file_object.mimetype.extension,
-    'file':      reverse('languagegallery:show_update', kwargs={ 'hash': file_object.sha256 }),
-    'thumbnail': reverse('languagegallery:thumb', kwargs={ 'hash': file_object.sha256 }),
     'title':     file_object.title,
     'width':     file_object.width,
     'height':    file_object.height,
     'tags':      [(tag.pk, tag.name) for tag in file_object.tags.all()],
     'is_public': file_object.is_public,
+    'thumbnail': reverse('languagegallery:thumb',
+        kwargs={ 'size': settings.THUMBNAIL_HEIGHT, 'hash': file_object.sha256 }),
+    'file':      reverse('languagegallery:show_update',
+        kwargs={ 'hash': file_object.sha256 }),
   }
 
 
@@ -41,7 +43,20 @@ def _list_files(request):
   return files
 
 
+def _permission_denied(request, errors=[]):
+  if request.content_type == 'application/json':
+    response = JsonResponse({ 'errors': errors })
+    response.status_code=403
+    return response
+  else:
+    return HttpResponseForbidden('Permission denied')
+
+
 def file_gallery(request):
+  if request.content_type == 'application/json':
+    return JsonResponse(
+        { 'items': list(map(_serialize_file_object, _list_files(request))) })
+
   context = {
     'upload_form':  forms.UploadForm(),
     'file_list':    _list_files(request),
@@ -61,10 +76,10 @@ def file_gallery(request):
 def file_upload(request):
   user = request.user
   if not user.is_authenticated:
-    return HttpResponseForbidden('Permission denied')
+    return _permission_denied(request)
 
   if request.method != 'POST':
-    return HttpResponseForbidden('Permission denied')
+    return _permission_denied(request)
 
   form = forms.UploadForm(request.POST, request.FILES)
 
@@ -82,10 +97,13 @@ def file_frame(request, hash, form=None):
   try:
     file_object = models.FileInfo.objects.get(sha256=hash)
   except models.FileInfo.DoesNotExist as dne:
-    return HttpResponseForbidden('Permission denied')
+    return _permission_denied(request)
 
   if not (file_object.is_public or file_object.creator == request.user):
-    return HttpResponseForbidden('Permission denied')
+    return _permission_denied(request)
+
+  if request.content_type == 'application/json':
+    return JsonResponse(_serialize_file_object(file_object))
 
   context = {
     'file': file_object,
@@ -102,10 +120,10 @@ def file_update(request, hash):
   try:
     file_object = models.FileInfo.objects.get(sha256=hash)
   except models.FileInfo.DoesNotExist as dne:
-    return HttpResponseForbidden('Permission denied')
+    return _permission_denied(request)
 
   if file_object.creator != request.user:
-    return HttpResponseForbidden('Permission denied')
+    return _permission_denied(request)
 
   user = request.user
 
@@ -114,7 +132,7 @@ def file_update(request, hash):
   elif set(request.GET):
     form = forms.UpdateFileForm(request.GET)
   else:
-    return HttpResponseForbidden('Permission denied')
+    return _permission_denied(request)
 
   if not form.is_valid():
     if request.content_type == 'application/json':
@@ -123,7 +141,7 @@ def file_update(request, hash):
       return file_frame(request, hash, form)
 
   if file_object.creator != user:
-    return HttpResponseForbidden('Permission denied')
+    return _permission_denied(request)
 
   data = form.cleaned_data
 
@@ -136,7 +154,8 @@ def file_update(request, hash):
   if data.get('add_tag'):
     tag_name = data['add_tag'].lower()
     if len(file_object.tags.filter(name=tag_name)) == 0:
-      tag, isnew = models.MediaTag.objects.get_or_create(name=tag_name, defaults={'creator': user})
+      tag, isnew = models.MediaTag.objects.get_or_create(
+          name=tag_name, defaults={'creator': user})
       if isnew:
         tag.full_clean()
         tag.save()
@@ -152,7 +171,8 @@ def file_update(request, hash):
   if request.content_type == 'application/json':
     return JsonResponse(_serialize_file_object(file_object))
   else:
-    return HttpResponseRedirect(reverse('languagegallery:show_update', kwargs={ 'hash': hash }))
+    return HttpResponseRedirect(reverse(
+        'languagegallery:show_update', kwargs={ 'hash': hash }))
 
 
 def thumbnail(request, size, hash):
@@ -187,16 +207,17 @@ def get_file(request, hash, extension):
   try:
     file_object = models.FileInfo.objects.get(sha256=hash)
   except models.FileInfo.DoesNotExist as dne:
-    return HttpResponseForbidden('Permission denied')
+    return _permission_denied(request)
 
   if not (file_object.is_public or file_object.creator == request.user):
-    return HttpResponseForbidden('Permission denied')
+    return _permission_denied(request)
 
   response = HttpResponse(file_object.file.open(), content_type=file_object.mimetype.mimetype)
   response['Expires'] = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime(TIME_FORMAT)
   return response
 
 
+@csrf_exempt
 def list_or_upload(request):
   if request.method == 'POST':
     return file_upload(request)

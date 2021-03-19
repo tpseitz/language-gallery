@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>{% load static %}
+  <head>{% load static %}{% load i18n static %}
     <meta charset="UTF-8">
     <script type="text/javascript" src="{% static 'brython.js' %}"></script>
     <script type="text/javascript" src="{% static 'brython_stdlib.js' %}"></script>
@@ -8,6 +8,20 @@
     <title>{% block title %}Image gallery{% endblock %}</title>
   </head>
   <body onload="brython()">
+    <div id="head">
+      <ul>
+        {% if user.is_authenticated %}
+          <li>
+            {{ user.username }}
+            <a href="{% url 'languagegallery:logout' %}">{% trans 'Log out' %}</a>
+          </li>
+        {% else %}
+          <li>
+            <a href="{% url 'languagegallery:login' %}">{% trans 'Log in' %}</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
     <div id="content">
       {% block content %}{% endblock %}
     </div>

@@ -16,7 +16,7 @@
 
   {% if user.is_authenticated %}
     <div id="upload-form">
-      <form action="{% url 'languagegallery:list_update' %}"
+      <form action="{% url 'languagegallery:list_upload' %}"
           enctype="multipart/form-data" method="post">
         {% csrf_token %}
         <input type="file" name="upload" required id="id_upload">
