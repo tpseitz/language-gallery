@@ -1,0 +1,38 @@
+{% extends "base.html" %}{% load static %}
+
+{% block title %}File | {% if file.title %}{{ file.title }}{% else %}{{ file.basename }}{% endif %}{% endblock %}
+
+{% block content %}
+  <div class="file">
+    <img src="{% url 'languagegallery:get_file' hash=file.sha256 extension=file.mimetype.extension %}">
+    {% if show_edit %}
+      <div id="upload-form">
+        <form action="{% url 'languagegallery:show_update' hash=file.sha256 %}"
+            enctype="multipart/form-data" method="post">
+          <p><input type="text" name="title" id="id_title" value="{{ file.title }}"></p>
+          <p>{{ file.basename }}</p>
+          <p><input type="checkbox" name="is_public"
+              id="id_is_public"{% if file.is_public %} checked{% endif %}>
+            <label for="id_is_public">public</p>
+          <ul id="tags">{% for tag in tags %}
+            <li>{{ tag.name }}<a
+                href="{% url 'languagegallery:show_update' hash=file.sha256 %}?del_tag={{ tag.pk }}"
+                class="delete"><img class="icon" src="{% static 'icons/delete.svg' %}"></a>
+            </li>
+            {% endfor -%}
+            <li class="input"><input type="text" name="add_tag" id="id_add_tag"></li>
+          </ul>
+          <input type="submit" value="Send">
+        </form>
+      </div>
+    {% else %}
+      <p>{{ file.title }}</p>
+      <p>{{ file.basename }}</p>
+      <ul id="tags">{% for tag in tags %}
+        <li>{{ tag.name }}</li>
+      {% endfor -%}
+      </ul>
+    {% endif %}
+  </div>
+{% endblock %}
+

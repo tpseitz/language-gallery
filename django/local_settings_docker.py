@@ -4,6 +4,8 @@ from os import getenv
 
 DEBUG = True
 
+ALLOWED_HOSTS = ['*']
+
 SECRET_KEY = 'REPLACE WITH REAL SECRET'
 
 DATABASES = {
@@ -17,5 +19,14 @@ DATABASES = {
   }
 }
 
+CACHES['files'] = {
+  'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+  'LOCATION': '/home/sid/cache',
+}
+
 MEDIA_ROOT = '/home/sid/upload'
+
+STATICFILES_DIRS += [
+  '/home/sid/brython',
+]
 

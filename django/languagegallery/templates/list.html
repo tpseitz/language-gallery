@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Gallery{% endblock %}
+
+{% block content %}
+  <table class="table" id="image_list">
+    <thead>
+      <tr>
+        <td>&nbsp;</td>
+        <td>title</td>
+        <td>basename</td>
+        <td>file type</td>
+        <td>tags</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for file in file_list %}
+        <tr class="image_line">
+          <td class="icon">
+            <img src="{% url 'languagegallery:thumb' size=25 hash=file.sha256 %}"></td>
+          <td><a href="{% url 'languagegallery:show_update' hash=file.sha256 %}"
+                target="_blank">{{ file.title }}</td>
+          <td><a href="{% url 'languagegallery:show_update' hash=file.sha256 %}"
+                  target="_blank">{{ file.basename }}</td>
+          <td>{{ file.mimetype.identifier }}</td>
+          <td>{% for tag in file.tags.all %}
+            <span class="tag">{{ tag.name }}</span>
+          {% endfor %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if user.is_authenticated %}
+    <div id="upload-form">
+      <form action="{% url 'languagegallery:list_upload' %}"
+          enctype="multipart/form-data" method="post">
+        <input type="file" name="upload" required id="id_upload">
+        <input type="submit" value="Send">
+      </form>
+    </div>
+  {% endif %}
+
+{% endblock %}
+{% block script %}
+  import interface
+
+  interface.upload_button('#upload-form')
+{% endblock %}

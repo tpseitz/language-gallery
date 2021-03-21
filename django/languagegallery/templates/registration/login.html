@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% load i18n static %}
+
+{% block title %}{% trans 'Log in' %}{% endblock %}
+
+{% block content %}
+<div class="dialog">
+{% if user.is_authenticated %}
+  <p>You are logged in as {{ user.username }}</p>
+{% else %}
+  <h1>{% trans 'Log in' %}</h1>
+  <form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+    <p>
+      {{ form.username.errors }}
+      {{ form.username.label_tag }} {{ form.username }}
+    </p><p>
+      {{ form.password.errors }}
+      {{ form.password.label_tag }} {{ form.password }}
+    </p><p>
+      <input type="submit" value="{% trans 'Log in' %}">
+    </p>
+  </form>
+{% endif %}
+</div>
+{% endblock %}
+

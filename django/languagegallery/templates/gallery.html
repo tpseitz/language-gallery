@@ -1,26 +1,32 @@
-<!DOCTYPE html><html>
-<head>{% load static %}
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="{% static 'gallery/style.css' %}">
-  <title>Image gallery</title>
-</head>
-<body>
-{% for file in file_list %}
-  <div class="image_frame">
-    <a href="files/{{file.hash_hex}}.{{file.extension}}" target="_blank">
-      <img src="thumb/{{file.hash_hex}}.jpeg">
-    </a>
+{% extends "base.html" %}
+
+{% block title %}Gallery{% endblock %}
+
+{% block content %}
+  <div id="image_list">
+    {% for file in file_list %}
+      <div class="image_frame">
+        <a href="{% url 'languagegallery:show_update' hash=file.sha256 %}"
+            target="_blank">
+          <img src="{% url 'languagegallery:thumb' size=300 hash=file.sha256 %}">
+        </a>
+      </div>
+    {% endfor %}
   </div>
-{% endfor %}
 
-<form action="{% url 'languagegallery:upload' %}"
-    enctype="multipart/form-data" method="post">
-  {% csrf_token %}
-  Title: <input type="text" name="title"><br>
-  File: <input type="file" name="upload"><br>
-  Tags: <br>
-  <input type="submit" value="Send"><br>
-</form>
+  {% if user.is_authenticated %}
+    <div id="upload-form">
+      <form action="{% url 'languagegallery:list_upload' %}"
+          enctype="multipart/form-data" method="post">
+        <input type="file" name="upload" required id="id_upload">
+        <input type="submit" value="Send">
+      </form>
+    </div>
+  {% endif %}
 
-</body>
-</html>
+{% endblock %}
+{% block script %}
+  import interface
+
+  interface.upload_button('#upload-form')
+{% endblock %}

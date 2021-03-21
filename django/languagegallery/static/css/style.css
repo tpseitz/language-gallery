@@ -1,0 +1,116 @@
+div#content {
+  max-width: 200pt;
+  max-width: 1200pt;
+  margin: auto;
+  font-family: "sans";
+}
+
+table.table {
+  width: 99%;
+  border-collapse: collapse;
+}
+
+table.table thead td {
+  background: #8af;
+  color: #fff;
+  font-weight: bold;
+}
+
+table.table tbody tr:nth-child(even) {
+  background: #eef;
+}
+
+table.table td {
+  padding: 2pt 10pt;
+  margin: 0pt;
+  border: solid 1pt #ddd;
+}
+
+table td.icon {
+  width: 1.5em;
+  padding: 1pt;
+  text-align: center;
+}
+
+table td.icon img {
+  max-height: 1em;
+}
+
+img.icon {
+  height: 1em;
+  vertical-align: bottom;
+  padding: 2pt 3pt;
+}
+
+div#content img {
+  max-width: 1200pt;
+}
+
+div#image_list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+}
+
+div#image_list div.image_frame {
+  display: inline-block;
+  margin: 1px;
+  border: none;
+  text-align: center;
+  vertical-align: middle;
+}
+
+div.file {
+  text-align: center;
+}
+
+div#upload-form {
+  text-align: center;
+  max-width: 600pt;
+  margin: auto;
+}
+
+input#id_title {
+  border: none;
+  border-radius: 0pt;
+  padding: 5pt;
+  text-align: center;
+}
+
+input#id_title:focus {
+  border-bottom: solid 1pt #88a;
+  background: #0001;
+  width: 95%;
+}
+
+ul#tags {
+  margin: auto;
+}
+
+ul#tags li, span.tag {
+  display: inline-block;
+  background: #aaf;
+  color: #004;
+  padding: 2pt 10pt;
+  border-radius: 10pt;
+}
+
+ul#tags li.input {
+  background: none;
+  border: none;
+}
+
+a.delete {
+  text-decoration: none;
+}
+
+input#id_add_tag {
+  border: none;
+  border-bottom: solid 1pt #88a;
+  border-radius: 0pt;
+  background: #0001;
+  padding: 5pt;
+}
+

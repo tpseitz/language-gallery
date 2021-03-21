@@ -44,8 +44,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'languagegallery.middleware.AuthMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -78,6 +78,19 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
     }
+}
+
+
+# Caches
+
+CACHES = {
+  'default': {
+    'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+  },
+  'files': {
+    'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+    'LOCATION': '/var/tmp/django_cache',
+  }
 }
 
 
@@ -119,4 +132,26 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, '..', 'staticroot')
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+  'project/static',
+]
+
+
+# Login settings
+LOGIN_URL='/login'
+LOGIN_REDIRECT_URL='/'
+LOGOUT_REDIRECT_URL = '/'
+
+
+# JWT authentication settings
+JWT_DEFAULT_ALGORITHM = 'HS256'
+JWT_ALGORITHMS = [JWT_DEFAULT_ALGORITHM]
+JWT_TOKEN_TTL_SECONDS = 3600
+
+
+# Default thumbnail sizes
+THUMBNAIL_WIDTH  = 400
+THUMBNAIL_HEIGHT = 300
+THUMBNAIL_ALLOWED_SIZES = { 25, 50, 100, 150 }
 
