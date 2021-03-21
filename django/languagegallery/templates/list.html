@@ -35,7 +35,6 @@
     <div id="upload-form">
       <form action="{% url 'languagegallery:list_upload' %}"
           enctype="multipart/form-data" method="post">
-        {% csrf_token %}
         <input type="file" name="upload" required id="id_upload">
         <input type="submit" value="Send">
       </form>

@@ -1,16 +1,17 @@
-import datetime, os.path
+import datetime, os.path, time, json
+import jwt
 from io import BytesIO
 from PIL import Image
 from django.template import loader
 from django.conf import settings
+from django.contrib.auth import authenticate
 from django.core.cache import caches
 from django.db.models import Q
 from django.http import (HttpResponse, FileResponse, JsonResponse,
     HttpResponseRedirect, HttpResponseNotFound, HttpResponseForbidden)
 from django.urls import reverse
-from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import gettext as _
 from . import models, converters, forms, operations
-
 
 TIME_FORMAT = '%a, %d %b %Y %H:%M:%S GMT'
 
@@ -217,7 +218,6 @@ def get_file(request, hash, extension):
   return response
 
 
-@csrf_exempt
 def list_or_upload(request):
   if request.method == 'POST':
     return file_upload(request)
@@ -230,4 +230,43 @@ def frame_or_update(request, hash):
     return file_update(request, hash)
   else:
     return file_frame(request, hash)
+
+
+def _generate_token(user):
+  return jwt.encode(
+      { "uid": user.pk, "exp": int(time.time() + settings.JWT_TOKEN_TTL_SECONDS) },
+      settings.SECRET_KEY, algorithm=settings.JWT_DEFAULT_ALGORITHM)
+
+
+def jwt_auth(request):
+  if request.method != 'POST' or request.content_type != 'application/json':
+    return _permission_denied(request)
+
+  errors, token = [], None
+
+  data = json.loads(request.body)
+  username = data.get('username')
+  password = data.get('password')
+  if username and password:
+    user = authenticate(username=username, password=password)
+    if user is None:
+      errors.append(_("authentication failed"))
+    else:
+      token = _generate_token(user)
+
+  else:
+    if not username: errors.append(_('Missing username'))
+    if not password: errors.append(_('Missing password'))
+
+  if token:
+    return JsonResponse({ 'token': token })
+  else:
+    return JsonResponse({ 'errors': errors })
+
+
+def jwt_refresh(request):
+  if request.user.is_authenticated:
+    return JsonResponse({ 'token': _generate_token(request.user) })
+  else:
+    return JsonResponse({ 'errors': [_('Not authenticated')] })
 

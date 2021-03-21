@@ -44,8 +44,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'languagegallery.middleware.AuthMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -136,6 +136,18 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
   'project/static',
 ]
+
+
+# Login settings
+LOGIN_URL='/login'
+LOGIN_REDIRECT_URL='/'
+LOGOUT_REDIRECT_URL = '/'
+
+
+# JWT authentication settings
+JWT_DEFAULT_ALGORITHM = 'HS256'
+JWT_ALGORITHMS = [JWT_DEFAULT_ALGORITHM]
+JWT_TOKEN_TTL_SECONDS = 3600
 
 
 # Default thumbnail sizes

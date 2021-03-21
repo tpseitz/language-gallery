@@ -9,7 +9,6 @@
       <div id="upload-form">
         <form action="{% url 'languagegallery:show_update' hash=file.sha256 %}"
             enctype="multipart/form-data" method="post">
-          {% csrf_token %}
           <p><input type="text" name="title" id="id_title" value="{{ file.title }}"></p>
           <p>{{ file.basename }}</p>
           <p><input type="checkbox" name="is_public"
