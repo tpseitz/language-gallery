@@ -19,6 +19,8 @@ DATABASES = {
   }
 }
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 CACHES['files'] = {
   'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
   'LOCATION': '/home/sid/cache',
