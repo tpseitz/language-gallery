@@ -9,7 +9,6 @@ RUN adduser -h /home/sid -D sid \
     && chmod 755 /home/sid/mediaroot /home/sid/cache /home/sid/brython
 
 ADD django /home/sid/app
-COPY system/init_django.sh /home/sid/init_django.sh
 COPY system/zshrc /home/sid/.zshrc
 RUN chown -R sid:sid /home/sid
 
