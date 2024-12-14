@@ -20,7 +20,7 @@ def updateFile(file_model):
 # Path parameter converters
 
 class FileHash:
-  regex = '[\da-f]{64}'
+  regex = r'[\da-f]{64}'
 
   def to_python(self, string):
     return hex_to_bytes(string)

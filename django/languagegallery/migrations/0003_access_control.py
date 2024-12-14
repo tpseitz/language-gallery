@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='fileinfo',
             name='created',
-            field=models.DateTimeField(auto_now_add=True, default='1970-01-01 00:00:00', verbose_name='uploaded'),
+            field=models.DateTimeField(auto_now_add=True, default='1970-01-01 00:00:00 Z', verbose_name='uploaded'),
             preserve_default=False,
         ),
         migrations.AddField(
@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='mediatag',
             name='created',
-            field=models.DateTimeField(auto_now_add=True, default='1970-01-01 00:00:00', verbose_name='created'),
+            field=models.DateTimeField(auto_now_add=True, default='1970-01-01 00:00:00 Z', verbose_name='created'),
             preserve_default=False,
         ),
         migrations.AddField(

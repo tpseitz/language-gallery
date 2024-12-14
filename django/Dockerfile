@@ -1,4 +1,4 @@
-FROM python:3.8-alpine AS runserver
+FROM python:3.13-alpine AS runserver
 
 RUN apk update && \
     apk add sudo bash zsh \
@@ -6,7 +6,7 @@ RUN apk update && \
 
 RUN adduser -h /home/sid -D sid
 RUN mkdir /home/sid/upload /home/sid/cache /home/sid/brython && \
-    chown sid.sid /home/sid/upload /home/sid/cache /home/sid/brython && \
+    chown sid:sid /home/sid/upload /home/sid/cache /home/sid/brython && \
     chmod 755 /home/sid/upload /home/sid/cache /home/sid/brython
 
 USER sid
@@ -15,7 +15,7 @@ ADD . /home/sid/app
 VOLUME ["/home/sid/app"]
 
 WORKDIR /home/sid/app
-RUN python3.8 -m venv ~/venv
+RUN python3 -m venv ~/venv
 RUN ~/venv/bin/pip install --upgrade pip wheel brython
 RUN ~/venv/bin/pip install -r requirements.txt
 
