@@ -10,15 +10,13 @@ unsetopt correct_all
 
 # Use bash completions
 autoload -U +X bashcompinit && bashcompinit
-
 setopt extendedglob
 unset menucomplete
 unsetopt automenu
 setopt GLOB_COMPLETE
 
-# Set user and computer colors
-setopt prompt_subst
-
+# Set more pleasant prompt
+export VIRTUAL_ENV_DISABLE_PROMPT=yes
 prompt='%{$fg[cyan]%}[20%D %*] %{$fg[yellow]%}(${VIRTUAL_ENV##*/}) %{$fg[green]%}%n@%M%{$fg[cyan]%}:%~
 %{$reset_color%}%(!.#.$) '
 
