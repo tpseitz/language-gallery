@@ -1,19 +1,20 @@
 FROM python:3.13-alpine AS runserver
 
 RUN apk update && \
-    apk add sudo bash zsh \
+    apk add sudo bash zsh vim \
         gcc postgresql-dev python3-dev musl-dev jpeg-dev zlib-dev
 
 RUN adduser -h /home/sid -D sid \
     && mkdir /home/sid/mediaroot /home/sid/cache /home/sid/brython \
-    && chmod 755 /home/sid/mediaroot /home/sid/cache /home/sid/brython \
-    && chown -R sid:sid /home/sid
+    && chmod 755 /home/sid/mediaroot /home/sid/cache /home/sid/brython
+
+ADD django /home/sid/app
+COPY system/init_django.sh /home/sid/init_django.sh
+COPY system/zshrc /home/sid/.zshrc
+RUN chown -R sid:sid /home/sid
 
 USER sid
 WORKDIR /home/sid/app
-
-ADD django /home/sid/app
-COPY scripts/init_django.sh /home/sid/init_django.sh
 
 RUN python3 -m venv ~/venv \
     && ~/venv/bin/pip install --upgrade pip wheel brython \

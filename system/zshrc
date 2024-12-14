@@ -1,0 +1,75 @@
+
+autoload -Uz compinit promptinit colors
+compinit
+promptinit
+colors
+
+# Disable autocorrect dialog
+unsetopt correct
+unsetopt correct_all
+
+# Use bash completions
+autoload -U +X bashcompinit && bashcompinit
+
+setopt extendedglob
+unset menucomplete
+unsetopt automenu
+setopt GLOB_COMPLETE
+
+# Set user and computer colors
+setopt prompt_subst
+
+prompt='%{$fg[cyan]%}[20%D %*] %{$fg[yellow]%}(${VIRTUAL_ENV##*/}) %{$fg[green]%}%n@%M%{$fg[cyan]%}:%~
+%{$reset_color%}%(!.#.$) '
+
+# Command history
+autoload history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+setopt hist_ignore_all_dups
+setopt share_history
+setopt hist_verify
+export HISTSIZE=5000
+export SAVEHIST=$HISTSIZE
+export HISTFILE="$HOME/.zsh_history"
+
+# Enable vi -mode
+bindkey -v
+bindkey -M vicmd 'k' history-beginning-search-backward-end
+bindkey -M vicmd 'j' history-beginning-search-forward-end
+
+# Emacs key bindings
+bindkey "^A" beginning-of-line
+bindkey "^E" end-of-line
+bindkey "^K" kill-line
+bindkey "^L" clear-screen
+bindkey "^R" history-incremental-search-backward
+bindkey "^U" backward-kill-line
+bindkey "^W" backward-kill-word
+bindkey "^Y" yank
+
+bindkey '^[[1;5C' forward-word
+bindkey '^[[1;5D' backward-word
+bindkey '^?' backward-delete-char
+
+[[ -n "${terminfo[khome]}" ]] && bindkey "${terminfo[khome]}" beginning-of-line
+[[ -n "${terminfo[kend]}" ]] && bindkey "${terminfo[kend]}" end-of-line
+
+# Set environment localisation to GB and language to English
+export LANG="en_GB.UTF-8"
+export LANGUAGE="en_GB:en"
+export LC_CTYPE="en_GB.UTF-8"
+export LC_ALL="en_GB.UTF-8"
+# Use vim as default editor
+export EDITOR=vim
+# Add local bin directory
+if [ -d "$HOME/.local/bin" ]; then
+  export PATH="$HOME/.local/bin:$PATH"
+fi
+
+if [ -d ~/venv/ ]; then
+  . ~/venv/bin/activate
+fi
+
