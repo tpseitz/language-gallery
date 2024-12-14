@@ -8,9 +8,7 @@ services:
       - '8000:8000'
     volumes:
       - ./django:/home/sid/app:z
-      - filestorage:/home/sid/upload:z
-      - filecache:/home/sid/cache:z
-      - ./scripts/init_django.sh:/usr/bin/init_django.sh:z
+      - mediaroot:/home/sid/mediaroot:z
     environment:
       - LANG=en_UK.utf8
       - LC_ALL=en_UK.UTF-8
@@ -19,10 +17,6 @@ services:
       - PYTHONDONTWRITEBYTECODE=1
       - HTTPS=off
       - DJANGO_SETTINGS_MODULE=local_settings_docker
-      - POSTGRES_HOST=postgresql
-      - POSTGRES_PASSWORD=gallery
-      - POSTGRES_USER=gallery
-      - POSTGRES_DB=gallery
       - FIXTURES=languagegallery/fixtures/assets.json
     networks:
       - network
@@ -49,8 +43,7 @@ services:
     tty: true
 
 volumes:
-  filestorage:
-  filecache:
+  mediaroot:
   postgresql:
 
 networks:
