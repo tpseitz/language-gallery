@@ -114,3 +114,22 @@ input#id_add_tag {
   padding: 5pt;
 }
 
+div#head {
+  border: solid 1pt #ddd;
+  border-width: 0pt 0pt 1pt 0pt;
+  padding: 5pt 10pt;
+  margin: 5pt 0pt;
+}
+
+div#head div {
+  display: inline-block;
+  vertical-align: top;
+  padding: 3pt 7pt;
+}
+
+div#head div#login {
+  border: solid 1pt #ddd;
+  right: 0pt;
+  left: auto;
+}
+
