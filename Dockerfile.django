@@ -10,6 +10,7 @@ RUN adduser -h /home/sid -D sid \
 
 ADD django /home/sid/app
 COPY system/zshrc /home/sid/.zshrc
+COPY system/vimrc /home/sid/.vimrc
 RUN chown -R sid:sid /home/sid
 
 USER sid

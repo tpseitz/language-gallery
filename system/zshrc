@@ -16,6 +16,7 @@ unsetopt automenu
 setopt GLOB_COMPLETE
 
 # Set more pleasant prompt
+setopt prompt_subst
 export VIRTUAL_ENV_DISABLE_PROMPT=yes
 prompt='%{$fg[cyan]%}[20%D %*] %{$fg[yellow]%}(${VIRTUAL_ENV##*/}) %{$fg[green]%}%n@%M%{$fg[cyan]%}:%~
 %{$reset_color%}%(!.#.$) '
