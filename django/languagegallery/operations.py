@@ -14,6 +14,11 @@ def handle_upload(post, file_data, creator):
   hsh = sha256(raw).digest()
   hshstr = converters.bytes_to_hex(hsh)
 
+  try:
+    return models.FileInfo.objects.get(sha256=hsh)
+  except models.FileInfo.DoesNotExist as dne:
+    pass
+
   img = Image.open(BytesIO(raw))
   # Read size
   width, height = img.size

@@ -90,8 +90,12 @@ def file_upload(request):
 
   file_object = operations.handle_upload(request.POST, request.FILES['upload'], user)
 
-  return HttpResponseRedirect(reverse('languagegallery:show_update',
-      kwargs={ 'hash': file_object.sha256 }))
+  file_url = reverse('languagegallery:show_update', kwargs={ 'hash': file_object.sha256 })
+
+  if request.content_type == 'application/json':
+    return JsonResponse(_serialize_file_object(file_object))
+
+  return HttpResponseRedirect(file_url)
 
 
 def file_frame(request, hash, form=None):
@@ -128,8 +132,14 @@ def file_update(request, hash):
 
   user = request.user
 
+  if file_object.creator != user:
+    return _permission_denied(request)
+
   if request.method == 'POST':
-    form = forms.UpdateFileForm(request.POST)
+    if request.content_type == 'application/json':
+      form = forms.UpdateFileForm(json.loads(request.body))
+    else:
+      form = forms.UpdateFileForm(request.POST)
   elif set(request.GET):
     form = forms.UpdateFileForm(request.GET)
   else:
@@ -140,9 +150,6 @@ def file_update(request, hash):
       return JsonResponse(form.errors)
     else:
       return file_frame(request, hash, form)
-
-  if file_object.creator != user:
-    return _permission_denied(request)
 
   data = form.cleaned_data
 
@@ -172,8 +179,7 @@ def file_update(request, hash):
   if request.content_type == 'application/json':
     return JsonResponse(_serialize_file_object(file_object))
   else:
-    return HttpResponseRedirect(reverse(
-        'languagegallery:show_update', kwargs={ 'hash': hash }))
+    return file_frame(request, hash)
 
 
 def thumbnail(request, size, hash):
@@ -185,7 +191,14 @@ def thumbnail(request, size, hash):
   if not (file_object.is_public or file_object.creator == request.user):
     return HttpResponseRedirect(settings.STATIC_URL + 'gallery/icon_broken.png')
 
-  if size < settings.THUMBNAIL_HEIGHT and size in settings.THUMBNAIL_ALLOWED_SIZES:
+  if size >= settings.THUMBNAIL_HEIGHT:
+    response = FileResponse(file_object.thumbnail.open(), content_type='image/jpeg')
+
+  else:
+    if size not in settings.THUMBNAIL_ALLOWED_SIZES:
+      sizes = [s for s in settings.THUMBNAIL_ALLOWED_SIZES if s < size]
+      if sizes: size = min(sizes)
+      else: size = min(settings.THUMBNAIL_ALLOWED_SIZES)
     hexhash = converters.bytes_to_hex(hash)
     cache = caches['files']
     key = f'{hexhash}-{size}'
@@ -197,8 +210,6 @@ def thumbnail(request, size, hash):
       data = buf.getbuffer().tobytes()
       cache.set(key, data)
     response = FileResponse(BytesIO(data), content_type='image/jpeg')
-  else:
-    response = FileResponse(file_object.thumbnail.open(), content_type='image/jpeg')
 
   response['Expires'] = (datetime.datetime.now() + datetime.timedelta(days=7)).strftime(TIME_FORMAT)
   return response
