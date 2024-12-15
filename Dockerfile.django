@@ -18,7 +18,8 @@ WORKDIR /home/sid/app
 
 RUN python3 -m venv ~/venv \
     && ~/venv/bin/pip install --upgrade pip wheel brython \
-    && ~/venv/bin/pip install -r requirements.txt
+    && ~/venv/bin/pip install -r requirements_prod.txt \
+    && ~/venv/bin/pip install -r requirements_dev.txt
 
 WORKDIR /home/sid/brython
 RUN ~/venv/bin/brython-cli --install

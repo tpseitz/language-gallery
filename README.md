@@ -44,3 +44,14 @@ python manage.py createsuperuser
 Django service should be available in
 [http://localhost:8000/](localhost port 8000).
 
+
+Managing dependencies
+---------------------
+
+In Django container you can compile requirement files with following commands:
+
+```
+uv pip compile requirements_prod.in -o requirements_prod.txt 
+uv pip compile requirements_dev.in -o requirements_dev.txt 
+```
+
