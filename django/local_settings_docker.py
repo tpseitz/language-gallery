@@ -19,9 +19,15 @@ DATABASES = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CACHES['files'] = {
-  'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-  'LOCATION': '/home/sid/cache',
+CACHES = {
+  'default': {
+    'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+    'LOCATION': 'memcached:11211',
+  },
+  'files': {
+    'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+    'LOCATION': '/home/sid/cache',
+  },
 }
 
 MEDIA_ROOT = '/home/sid/mediaroot'

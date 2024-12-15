@@ -2,3 +2,4 @@ Django==5.1.*
 psycopg2==2.9.*
 Pillow==11.0.*
 PyJWT==2.10.*
+pymemcache==4.0.*

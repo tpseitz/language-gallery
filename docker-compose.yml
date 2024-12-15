@@ -23,11 +23,18 @@ services:
     networks:
       - network
     links:
+      - memcached
       - postgresql
     depends_on:
+      - memcached
       - postgresql
     stdin_open: true
     tty: true
+
+  memcached:
+    image: memcached:1.6
+    networks:
+      - network
 
   postgresql:
     image: postgres:17.2
