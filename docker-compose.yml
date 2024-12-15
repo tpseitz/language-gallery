@@ -3,14 +3,14 @@ version: '3'
 services:
   runserver:
     image: runserver
-    build: django
+    build:
+      context: .
+      dockerfile: Dockerfile.django
     ports:
       - '8000:8000'
     volumes:
       - ./django:/home/sid/app:z
-      - filestorage:/home/sid/upload:z
-      - filecache:/home/sid/cache:z
-      - ./scripts/init_django.sh:/usr/bin/init_django.sh:z
+      - mediaroot:/home/sid/mediaroot:z
     environment:
       - LANG=en_UK.utf8
       - LC_ALL=en_UK.UTF-8
@@ -19,42 +19,22 @@ services:
       - PYTHONDONTWRITEBYTECODE=1
       - HTTPS=off
       - DJANGO_SETTINGS_MODULE=local_settings_docker
-      - POSTGRES_HOST=postgresql
-      - POSTGRES_PASSWORD=gallery
-      - POSTGRES_USER=gallery
-      - POSTGRES_DB=gallery
       - FIXTURES=languagegallery/fixtures/assets.json
     networks:
       - network
     links:
+      - memcached
       - postgresql
     depends_on:
+      - memcached
       - postgresql
     stdin_open: true
     tty: true
 
-#  webapp:
-#    image: webapp
-#    build: react
-#    user: node
-#    command: /usr/bin/run_react.sh
-#    ports:
-#      - '3000:3000'
-#    volumes:
-#      - ./react:/home/node/app:z
-#      - ./scripts/run_react.sh:/usr/bin/run_react.sh:z
-#      - node_modules:/home/sid/app/node_modules
-#    environment:
-#      - HTTPS=off
-#      - LANG=en_UK.utf8
-#      - LC_ALL=en_UK.UTF-8
-#      - LC_LANG=en_UK.UTF-8
-#    networks:
-#      - network
-#    depends_on:
-#      - runserver
-#    stdin_open: true
-#    tty: true
+  memcached:
+    image: memcached:1.6
+    networks:
+      - network
 
   postgresql:
     image: postgres:17.2
@@ -72,9 +52,7 @@ services:
     tty: true
 
 volumes:
-  filestorage:
-  filecache:
-  node_modules:
+  mediaroot:
   postgresql:
 
 networks:

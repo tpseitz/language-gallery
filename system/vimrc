@@ -1,0 +1,19 @@
+
+syntax enable
+scriptencoding UTF-8
+set encoding=UTF-8
+set scrolloff=5
+set foldmethod=manual
+set number
+
+" Indentation
+set noautoindent
+set nosmartindent
+set expandtab
+set tabstop=2
+set shiftwidth=2
+
+" Statusline
+set laststatus=2
+set showcmd
+

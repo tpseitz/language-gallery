@@ -81,6 +81,12 @@ DATABASES = {
 }
 
 
+# Session
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_COOKIE_AGE = 1800  # 60 * 30 = 30 minutes
+
+
 # Caches
 
 CACHES = {
