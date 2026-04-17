@@ -2,13 +2,13 @@
 #    uv pip compile requirements_prod.in -o requirements_prod.txt
 asgiref==3.8.1
     # via django
-django==5.1.7
+django==5.2.13
     # via -r requirements_prod.in
-pillow==11.0.0
+pillow==12.2.0
     # via -r requirements_prod.in
 psycopg2==2.9.10
     # via -r requirements_prod.in
-pyjwt==2.10.1
+pyjwt==2.12.1
     # via -r requirements_prod.in
 pymemcache==4.0.0
     # via -r requirements_prod.in
