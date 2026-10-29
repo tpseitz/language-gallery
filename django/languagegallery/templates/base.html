@@ -9,18 +9,17 @@
   </head>
   <body onload="brython()">
     <div id="head">
-      <ul>
+      <div id="login">
         {% if user.is_authenticated %}
-          <li>
-            {{ user.username }}
-            <a href="{% url 'languagegallery:logout' %}">{% trans 'Log out' %}</a>
-          </li>
+          {{ user.username }}<br>
+          <a href="{% url 'languagegallery:logout' %}">{% trans 'Log out' %}</a>
         {% else %}
-          <li>
-            <a href="{% url 'languagegallery:login' %}">{% trans 'Log in' %}</a>
-          </li>
+          <a href="{% url 'languagegallery:login' %}">{% trans 'Log in' %}</a>
         {% endif %}
-      </ul>
+      </div>
+      <div>
+        <a href="{% url 'languagegallery:list_upload' %}">{% trans 'Home' %}</a>
+      </div>
     </div>
     <div id="content">
       {% block content %}{% endblock %}
