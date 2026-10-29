@@ -1,5 +1,5 @@
-Django==6.0.*
+Django==6.1.*
 psycopg2==2.9.*
-pillow==12.2.*
-PyJWT==2.13.*
+pillow==13.0.*
+PyJWT==2.15.*
 pymemcache==4.0.*
