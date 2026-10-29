@@ -16,17 +16,17 @@ RUN chown -R sid:sid /home/sid
 USER sid
 WORKDIR /home/sid/app
 
-RUN python3 -m venv ~/venv \
-    && ~/venv/bin/pip install --upgrade pip wheel \
-    && ~/venv/bin/pip install -r requirements_prod.txt \
-    && ~/venv/bin/pip install -r requirements_dev.txt \
-    && ~/venv/bin/pip install -r requirements_brython.txt
+RUN python3 -m venv /home/sid/venv \
+    && /home/sid/venv/bin/pip install --upgrade pip wheel \
+    && /home/sid/venv/bin/pip install -r requirements_prod.txt \
+    && /home/sid/venv/bin/pip install -r requirements_dev.txt \
+    && /home/sid/venv/bin/pip install -r requirements_brython.txt
 
 WORKDIR /home/sid/brython
-RUN ~/venv/bin/brython-cli install
+RUN /home/sid/venv/bin/brython-cli install
 
 EXPOSE 8000/tcp
 
 WORKDIR /home/sid/app
-CMD ["~/venv/bin/python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["/home/sid/venv/bin/python", "manage.py", "runserver", "0.0.0.0:8000"]
 
